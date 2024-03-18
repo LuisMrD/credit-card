@@ -1,41 +1,112 @@
-## Micronaut 4.3.6 Documentation
+Projeto desafio
 
-- [User Guide](https://docs.micronaut.io/4.3.6/guide/index.html)
-- [API Reference](https://docs.micronaut.io/4.3.6/api/index.html)
-- [Configuration Reference](https://docs.micronaut.io/4.3.6/guide/configurationreference.html)
-- [Micronaut Guides](https://guides.micronaut.io/index.html)
----
+Usei o JDK 11 para o projeto.
 
-- [Micronaut Maven Plugin documentation](https://micronaut-projects.github.io/micronaut-maven-plugin/latest/)
-## Feature maven-enforcer-plugin documentation
+==============================
 
-- [https://maven.apache.org/enforcer/maven-enforcer-plugin/](https://maven.apache.org/enforcer/maven-enforcer-plugin/)
+Primeiro passo (opcional)
+
+Criar uma nova "conta" em: /account
+
+Metodo: POST
+Json:
+{
+	"name":"Luis Teste",
+	"document":"35376768830"
+}
+
+name: nome do usuario
+document: cpf (requer 11 digitos)
+
+Retorno:
+{
+	"id": 1,
+	"accountNumber": "1528122518571506",
+	"name": "Luis Teste",
+	"document": "35376768830"
+}
+
+accountNumber: numero do "cartão", gerado aleatóriamente com 16 digitos
+
+==============================
+
+Criar nova transação
+
+Criar uma nova "transação" em: /payment
+
+Metodo: POST
+Json:
+{
+	"businessEstablishment":"padaria",
+	"value": 66,
+	"valueOfInstallments": 66,
+	"numberOfInstallments": 1,
+	"accountNumber":"1528122518571506",
+	"transactionDate":"19/03/2024"
+}
+
+businessEstablishment: nome do estabelecimento
+value: valor total da compra
+valueOfInstallments: valor das parcelas
+numberOfInstallments: numero de parcelas
+accountNumber: numero do cartão ( gerado no primeiro passo )
+transactionDate: data da compra ( dd/MM/yyyy )
+
+Retorno:
+{
+	"id": 1
+}
+
+id: id da fatura atual
+
+Caso número de parcelas seja 1, uma nova fatura é criada para o mês vigente se não houver.
+Caso número de parcelas seja maior que 1, uma nova fatura é criada para o mês seguinte,
+além de uma nova fatura para o mês vigente se ainda não houver.
+
+==============================
+
+Listar transações
+
+Endpoint: /creditCardBill/{numero do cartao}/{mes}/{ano}
+Metodo: GET
+
+Retorno:
+[
+	{
+		"id": 1,
+		"businessEstablishment": "padaria",
+		"value": 66.0,
+		"valueOfInstallments": 66.0,
+		"numberOfInstallments": 2,
+		"numberOfCurrentInstallment": 1,
+		"accountNumber": "7866604200472480",
+		"creditCardBillId": 1,
+		"transactionDate": 1710817200000
+	}
+]
+
+Retorna uma lista com todas as transações do mês
+
+==============================
+
+Fechar fatura vigente
+
+Endpoint: /creditCardBill
+Metodo: PATCH
+
+Json:
+{
+	"creditCardBillId": 1,
+	"accountNumber" : "1528122518571506"
+}
+
+creditCardBillId: id da fatura
+accountNumber: numero do cartão
+
+Faz com que o status da fatura seja atualizado para fechado,
+e deixa a próxima fatura ( se houver ) com status de aberto.
+
+==============================
 
 
-## Feature jdbc-hikari documentation
-
-- [Micronaut Hikari JDBC Connection Pool documentation](https://micronaut-projects.github.io/micronaut-sql/latest/guide/index.html#jdbc)
-
-
-## Feature micronaut-aot documentation
-
-- [Micronaut AOT documentation](https://micronaut-projects.github.io/micronaut-aot/latest/guide/)
-
-
-## Feature hibernate-jpa documentation
-
-- [Micronaut Hibernate JPA documentation](https://micronaut-projects.github.io/micronaut-sql/latest/guide/index.html#hibernate)
-
-
-## Feature lombok documentation
-
-- [Micronaut Project Lombok documentation](https://docs.micronaut.io/latest/guide/index.html#lombok)
-
-- [https://projectlombok.org/features/all](https://projectlombok.org/features/all)
-
-
-## Feature serialization-jackson documentation
-
-- [Micronaut Serialization Jackson Core documentation](https://micronaut-projects.github.io/micronaut-serialization/latest/guide/)
-
-
+    
