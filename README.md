@@ -4,6 +4,10 @@ Usei o JDK 11 para o projeto.
 
 ==============================
 
+O arquivo SWAGGER.yml pode ser importado em https://editor.swagger.io/
+
+==============================
+
 Primeiro passo (opcional)
 
 Criar uma nova "conta" em: /account
