@@ -6,10 +6,12 @@ import dev.luisoliveira.repositories.CreditCardBillRepository;
 import dev.luisoliveira.services.useCases.CloseCreditCardBill;
 
 import javax.inject.Singleton;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
 import java.time.temporal.TemporalAdjusters;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Singleton
 public class CloseCreditCardBillImpl implements CloseCreditCardBill {
@@ -26,6 +28,8 @@ public class CloseCreditCardBillImpl implements CloseCreditCardBill {
     public void closeCreditCardBill(CloseCreditCardBillDto closeCreditCardBillDto) {
         Optional<CreditCardBillEntity> creditCardBill = getCreditCardBillUseCase.findByIdAndAccountNumber(closeCreditCardBillDto.getCreditCardBillId()
                 , closeCreditCardBillDto.getAccountNumber());
+
+        List<CreditCardBillEntity> list = creditCardBillRepository.findAll();
 
         if(creditCardBill.isPresent()){
             creditCardBill.get().setOpen(false);
@@ -53,9 +57,10 @@ public class CloseCreditCardBillImpl implements CloseCreditCardBill {
     }
 
     private void openNextCreditCardBillIfExists(CreditCardBillEntity currentCreditCardBill){
+
         Optional<CreditCardBillEntity> creditCardBill = getCreditCardBillUseCase.findCreditCardBillByMonthAndYearAndAccountNumber(currentCreditCardBill.getAccountNumber(),
                 currentCreditCardBill.getMonth().plus(1),
-                currentCreditCardBill.getYear());
+                currentCreditCardBill.getMonth() == Month.DECEMBER ? currentCreditCardBill.getYear().plusYears(1) : currentCreditCardBill.getYear());
 
         if(creditCardBill.isPresent()){
             creditCardBill.get().setOpen(true);

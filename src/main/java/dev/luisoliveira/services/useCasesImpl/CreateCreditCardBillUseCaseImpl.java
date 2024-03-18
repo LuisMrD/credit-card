@@ -36,7 +36,7 @@ public class CreateCreditCardBillUseCaseImpl implements CreateCreditCardBillUseC
             }
         }
 
-        if( creditCardBill.isEmpty() ){
+        if(creditCardBill.isEmpty()){
             newCreditCardBill = creditCardBillWithCurrentMonth(accountNumber, month, year);
         }
 
@@ -48,7 +48,6 @@ public class CreateCreditCardBillUseCaseImpl implements CreateCreditCardBillUseC
         newCreditCardBill.setAccountNumber(accountNumber);
         newCreditCardBill.setMonth(month);
         newCreditCardBill.setYear(year);
-        newCreditCardBill.setOpen(true);
 
         return creditCardBillRepository.save(newCreditCardBill);
     }
@@ -58,7 +57,7 @@ public class CreateCreditCardBillUseCaseImpl implements CreateCreditCardBillUseC
         newCreditCardBill.setAccountNumber(accountNumber);
         newCreditCardBill.setMonth(month.plus(1));
         newCreditCardBill.setYear(year);
-        newCreditCardBill.setOpen(false);
+        newCreditCardBill.setOpen(true);
 
         return creditCardBillRepository.save(newCreditCardBill);
     }

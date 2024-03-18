@@ -24,13 +24,13 @@ public class CreditCardBillController {
     }
 
     @Patch
-    public HttpResponse<HttpStatus> createNewAccount(@Body @Valid CloseCreditCardBillDto closeCreditCardBillDto){
+    public HttpResponse<HttpStatus> closeCreditCardBill(@Body @Valid CloseCreditCardBillDto closeCreditCardBillDto){
         creditCardBIllService.closeCreditCardBill(closeCreditCardBillDto);
         return HttpResponse.ok();
     }
 
     @Get("/{accountNumber}/{month}/{year}")
-    public HttpResponse<List<ListPaymentTransactionDto>> createNewAccount(String accountNumber, String month, String year){
+    public HttpResponse<List<ListPaymentTransactionDto>> closeCreditCardBill(String accountNumber, String month, String year){
         return HttpResponse.ok(getPaymentTransactionsUseCase.getPaymentTransactionDtoList(accountNumber,
                 Month.of(Integer.parseInt(month)), Year.of(Integer.parseInt(year))));
     }
