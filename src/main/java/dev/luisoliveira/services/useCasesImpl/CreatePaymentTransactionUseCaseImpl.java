@@ -7,7 +7,6 @@ import dev.luisoliveira.repositories.PaymentTransactionRepository;
 import dev.luisoliveira.services.useCases.CreateCreditCardBillUseCase;
 import dev.luisoliveira.services.useCases.CreatePaymentTransactionUseCase;
 import dev.luisoliveira.services.useCases.GetCreditCardBillUseCase;
-import dev.luisoliveira.services.useCases.SetOpenForCreditCardBillUseCase;
 
 import javax.inject.Singleton;
 import java.time.Month;
@@ -18,11 +17,9 @@ import java.util.Calendar;
 public class CreatePaymentTransactionUseCaseImpl implements CreatePaymentTransactionUseCase {
 
     PaymentTransactionRepository paymentTransactionRepository;
-    SetOpenForCreditCardBillUseCaseImpl setOpenForCreditCardBillUseCase;
 
-    public CreatePaymentTransactionUseCaseImpl(PaymentTransactionRepository paymentTransactionRepository, SetOpenForCreditCardBillUseCaseImpl setOpenForCreditCardBillUseCase) {
+    public CreatePaymentTransactionUseCaseImpl(PaymentTransactionRepository paymentTransactionRepository) {
         this.paymentTransactionRepository = paymentTransactionRepository;
-        this.setOpenForCreditCardBillUseCase = setOpenForCreditCardBillUseCase;
     }
 
     @Override
@@ -40,9 +37,7 @@ public class CreatePaymentTransactionUseCaseImpl implements CreatePaymentTransac
         } else {
 
             CreditCardBillEntity creditCardBill = createCreditCardBillUseCase.createNewCreditCardBill(paymentTransactionDto.getAccountNumber(),
-                    Month.of(calendar.get(Calendar.MONTH) + 1), Year.of(calendar.get(Calendar.YEAR)));
-
-            setOpenForCreditCardBillUseCase.setIsOpen(creditCardBill.getId(), true);
+                    Month.of(calendar.get(Calendar.MONTH) + 1), Year.of(calendar.get(Calendar.YEAR)), true);
 
             PaymentTransactionEntity paymentTransactionEntity = createPaymentTransactionEntity(paymentTransactionDto);
             paymentTransactionEntity.setNumberOfCurrentInstallment(paymentTransactionDto.getNumberOfInstallments());
@@ -62,12 +57,18 @@ public class CreatePaymentTransactionUseCaseImpl implements CreatePaymentTransac
 
         for(int i = 1; i <= paymentTransactionDto.getNumberOfInstallments(); i++){
 
+            boolean isOpen = false;
+
             if( i > 1){
                 calendar.add(Calendar.MONTH, 1);
             }
 
+            if( i == 1 ){
+                isOpen = true;
+            }
+
             CreditCardBillEntity creditCardBill = createCreditCardBillUseCase.createNewCreditCardBill(paymentTransactionDto.getAccountNumber(),
-                    Month.of(calendar.get(Calendar.MONTH) + 1), Year.of(calendar.get(Calendar.YEAR)));
+                    Month.of(calendar.get(Calendar.MONTH) + 1), Year.of(calendar.get(Calendar.YEAR)), isOpen);
 
             PaymentTransactionEntity paymentTransactionEntity = createPaymentTransactionEntity(paymentTransactionDto);
             paymentTransactionEntity.setNumberOfCurrentInstallment(i);
@@ -75,7 +76,6 @@ public class CreatePaymentTransactionUseCaseImpl implements CreatePaymentTransac
 
             if(i == 1){
                 paymentTransaction = paymentTransactionRepository.save(paymentTransactionEntity);
-                setOpenForCreditCardBillUseCase.setIsOpen(creditCardBill.getId(), true);
 
             }else{
                 paymentTransactionRepository.save(paymentTransactionEntity);

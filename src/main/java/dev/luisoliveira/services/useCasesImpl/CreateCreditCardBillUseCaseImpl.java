@@ -21,7 +21,7 @@ public class CreateCreditCardBillUseCaseImpl implements CreateCreditCardBillUseC
     }
 
     @Override
-    public CreditCardBillEntity createNewCreditCardBill(String accountNumber, Month month, Year year) {
+    public CreditCardBillEntity createNewCreditCardBill(String accountNumber, Month month, Year year, Boolean isOpen) {
 
         Optional<CreditCardBillEntity> creditCardBill = getCreditCardBillUseCase.findCreditCardBillByMonthAndYearAndAccountNumber(accountNumber,
                 month, year);

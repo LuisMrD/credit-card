@@ -33,7 +33,7 @@ public class CloseCreditCardBillImpl implements CloseCreditCardBill {
 
         if(creditCardBill.isPresent()){
             creditCardBill.get().setOpen(false);
-            creditCardBillRepository.save(creditCardBill.get());
+            creditCardBillRepository.update(creditCardBill.get());
 
             openNextCreditCardBillIfExists(creditCardBill.get());
         }

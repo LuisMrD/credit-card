@@ -30,7 +30,7 @@ public class CreditCardBIllService {
         Optional<CreditCardBillEntity> creditCardBill = getCreditCardBillUseCase.findCreditCardBillByMonthAndYearAndAccountNumberAndOpenTrue(accountNumber, month, year);
 
         if(creditCardBill.isEmpty()){
-            return createCreditCardBillUseCase.createNewCreditCardBill(accountNumber, month, year);
+            return createCreditCardBillUseCase.createNewCreditCardBill(accountNumber, month, year, true);
         }
 
         return creditCardBill.get();

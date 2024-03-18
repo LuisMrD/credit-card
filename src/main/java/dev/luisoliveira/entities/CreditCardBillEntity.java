@@ -22,7 +22,7 @@ public class CreditCardBillEntity extends BaseEntity{
 
     private Year year;
 
-    private Boolean open = false;
+    private Boolean open;
 
     private String accountNumber;
 

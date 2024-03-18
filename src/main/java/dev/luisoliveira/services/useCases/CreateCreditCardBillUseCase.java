@@ -7,5 +7,5 @@ import java.time.Year;
 
 public interface CreateCreditCardBillUseCase {
 
-    CreditCardBillEntity createNewCreditCardBill(String accountNumber, Month month, Year year);
+    CreditCardBillEntity createNewCreditCardBill(String accountNumber, Month month, Year year, Boolean isOpen);
 }
